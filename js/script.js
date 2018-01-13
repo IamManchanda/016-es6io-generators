@@ -3,28 +3,29 @@
  */
 
 /* eslint-disable */
-function* listPeople() {
-  for (let i = 0; i < 5; i++) {
-    yield i;
-  }
+
+function ajax(url) {
+  fetch(url)
+    .then(data => data.json())
+    .then(data => dataGen.next(data));
 }
 
-const people = listPeople();
+function* steps() {
+  console.log('Fetching harry');
+  const harry = yield ajax('https://api.github.com/users/IamManchanda');
+  console.log(harry);
+  console.log('\n');
 
-const inventors = [
-  { first: 'Albert', last: 'Einstein', year: 1879 },
-  { first: 'Isaac', last: 'Newton', year: 1643 },
-  { first: 'Galileo', last: 'Galilei', year: 1564 },
-  { first: 'Marie', last: 'Curie', year: 1867 },
-  { first: 'Johannes', last: 'Kepler', year: 1571 },
-  { first: 'Nicolaus', last: 'Copernicus', year: 1473 },
-  { first: 'Max', last: 'Planck', year: 1858 },
-];
+  console.log('Fetching wes');
+  const wes = yield ajax('https://api.github.com/users/wesbos');
+  console.log(wes);
+  console.log('\n');
 
-function* loop(arr) {
-  for (const item of arr) {
-    yield item;
-  }
+  console.log('Fetching fatJoe');
+  const fatJoe = yield ajax('https://api.discogs.com/artists/51988');
+  console.log(fatJoe);
+  console.log('\n');
 }
 
-const inventorGen = loop(inventors);
+const dataGen = steps();
+dataGen.next();
